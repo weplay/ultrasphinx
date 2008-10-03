@@ -19,7 +19,8 @@ require 'ultrasphinx/is_indexed'
 
 if (ActiveRecord::Base.connection rescue nil) # XXX Not sure why this needed to be wrapped.
   require 'ultrasphinx/configure'
-  require 'ultrasphinx/autoload'
+  # commented out b/c it's preferable to load Ultrasphinx at the end of the environment 
+  #  require 'ultrasphinx/autoload'
   require 'ultrasphinx/fields'
 
   require 'ultrasphinx/search/internals'
