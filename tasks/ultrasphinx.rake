@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__) + '/../lib')
 
 ENV['RAILS_ENV'] ||= "development"
 
@@ -6,6 +7,7 @@ namespace :ultrasphinx do
   task :_environment => [:environment] do
     # We can't just chain :environment because we want to make 
     # sure it's set only for known Sphinx tasks
+    require 'ultrasphinx'
     Ultrasphinx.with_rake = true
   end
   
@@ -108,7 +110,9 @@ namespace :ultrasphinx do
         end
       end
       say "writing #{words.size} words"
-      File.open(tmpfile, 'w').write(words.join("\n"))
+      File.open(tmpfile, 'w') do |f|
+        f.write(words.join("\n"))
+      end
       say "loading dictionary '#{Ultrasphinx::DICTIONARY}' into aspell"
       system("aspell --lang=en create master #{Ultrasphinx::DICTIONARY}.rws < #{tmpfile}")
     end

@@ -247,8 +247,8 @@ module Ultrasphinx
               raise "Concatenation text facets have not been implemented"
           end
           
-          klass.connection.execute("SELECT #{field_string} AS value, #{SQL_FUNCTIONS[ADAPTER]['hash']._interpolate(field_string)} AS hash FROM #{klass.table_name} #{join_string} GROUP BY value").each do |value, hash|
-            FACET_CACHE[facet][hash.to_i] = value
+          klass.connection.execute("SELECT #{field_string} AS value, #{SQL_FUNCTIONS[ADAPTER]['hash']._interpolate(field_string)} AS hash FROM #{klass.table_name} #{join_string} GROUP BY value").each do |hash|
+            FACET_CACHE[facet][hash['hash'].to_i] = hash['value']
           end                            
           klass
         end
@@ -284,7 +284,7 @@ module Ultrasphinx
         end
         
         ids.map {|ary| ary.first}.uniq.each do |class_name|
-          klass = class_name.constantize
+          klass = class_name.singularize.constantize
           
           finder = (
             Ultrasphinx::Search.client_options['finder_methods'].detect do |method_name| 
